@@ -1,0 +1,91 @@
+﻿@model EventosVerano.Models.Usuario
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<h1>Detalles</h1>
+
+<div>
+    <h4>Usuario</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Mail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Mail)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Evento</h4>
+    <hr/>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Título")
+                </th>
+                <th>
+                    @Html.DisplayName("Fecha")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @if(ViewBag.Events == null || ((List<Evento>)ViewBag.Events).Count() == 0) {
+                <tr>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>    
+        }else @foreach(Evento evento in ViewBag.Events) {
+                <tr>
+                    <td><a asp-controller="Eventos" asp-action="Details" asp-route-id="@evento.Id">@Html.DisplayFor(modelItem => evento.Titulo)</a></td>
+                    <td>@Html.DisplayFor(modelItem => evento.Fecha)</td>
+                    <td>
+                        <form asp-controller="Usuarios" asp-action="RemoveEvent" method="post">
+                            <input id="eventId" name="eventId" value="@evento.Id" hidden/>
+                            <input id="user" name="user" value="@Model.Id" hidden/>
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+        }
+
+    <table/>
+</div>
+
+@if(((List<Evento>)ViewBag.EventsAviableList).Count() > 0) {
+    
+    <div>
+        <form asp-controller="Usuarios" asp-action="AddEvent" method="post">
+            <input id="user" name="user" value="@Model.Id" hidden/>
+            <label class="control-label">Eventos disponibles</label>
+            <select id="eventId" name="eventId" class="form-control" asp-items="ViewBag.EventsAviables"></select>
+            <button type="submit" class="btn btn-success">Añadir evento</button>
+        </form>
+    </div>
+
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+    <a asp-action="Index">Volver a la lista</a>
+</div>
+
+<br/>
+<br/>

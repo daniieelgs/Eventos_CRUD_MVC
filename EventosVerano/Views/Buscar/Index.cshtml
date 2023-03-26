@@ -1,0 +1,49 @@
+﻿@model DateTime
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Index</h1>
+
+<form asp-controller="Buscar" asp-action="Index">
+
+    <input class="form-control" type="datetime-local" id="data" name="data" value="@Model.Year-@(Model.Month < 10 ? '0' + Model.Month.ToString() : Model.Month)-@(Model.Day < 10 ? '0' + Model.Day.ToString() : Model.Day)T@(Model.Hour < 10 ? '0' + Model.Hour.ToString() : Model.Hour):@(Model.Minute < 10 ? '0' + Model.Minute : Model.Minute)">
+
+    <button type="submit" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-magnifying-glass"></i></button>
+</form>
+
+@if(ViewBag.EventsData != null){
+
+    <div>
+        <h4>Eventos</h4>
+        <hr />
+
+        @if(((List<Evento>)ViewBag.EventsData).Count() > 0) {
+            <div>
+                <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("Título")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Fecha")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach(Evento evento in ViewBag.EventsData) {
+                            <tr>
+                                <td><a asp-controller="Eventos" asp-action="Details" asp-route-id="@evento.Id">@Html.DisplayFor(modelItem => evento.Titulo)</a></td>
+                                <td>@Html.DisplayFor(modelItem => evento.Fecha)</td>
+                            </tr>
+                        }
+                 <table/>
+            </div>
+
+    } else {
+            <h6>¡No hay resultados!</h6>
+        }
+    </div>
+
+}
